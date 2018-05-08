@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
-  <!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
   <style>
     body {
       overflow: hidden;
+      background: url("https://raw.githubusercontent.com/pffy/gif-spinner/master/spinner.gif") center no-repeat;
     }
 
     html, body, object, iframe {
@@ -27,10 +27,31 @@
     document.addEventListener('DOMContentLoaded', function() {
       var query = URI(location.href).search(true);
       document.title = query.name || 'PDF';
-      var encoded_url = encodeURIComponent(query.url);
-      PDFObject.embed(query.url, 'body', {
-        fallbackLink: '<iframe src="https://docs.google.com/viewer?embedded=true&url=' + encoded_url + '"></iframe>',
-      });
+
+      if (PDFObject.supportsPDFs) {
+        PDFObject.embed(query.url, 'body');
+      } else {
+        var url = 'https://docs.google.com/viewer?embedded=true&url=' + encodeURIComponent(query.url);
+
+        var reload = function() {
+          document.getElementsByTagName('iframe')[0].src = url;
+        };
+
+        var time = 2000;
+        if (window.performance && window.performance.timing) {
+          time = Math.max(time, (Date.now() - window.performance.timing.requestStart) * 2);
+        }
+        var interval = setInterval(reload, time);
+
+        var iframe = document.createElement('iframe');
+        document.body.appendChild(iframe);
+
+        iframe.addEventListener('load', function() {
+          clearInterval(interval);
+        });
+
+        reload();
+      }
     });
   </script>
 </head>
