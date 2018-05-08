@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">-->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    html, body, object, iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+  </style>
+
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/URI.js/1.19.1/URI.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdfobject/2.0.201604172/pdfobject.min.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var query = URI(location.href).search(true);
+      document.title = query.name || 'PDF';
+      var encoded_url = encodeURIComponent(query.url);
+      PDFObject.embed(query.url, 'body', {
+        fallbackLink: '<iframe src="https://docs.google.com/viewer?embedded=true&url=' + encoded_url + '"></iframe>',
+      });
+    });
+  </script>
+</head>
+<body>
+</body>
+</html>
